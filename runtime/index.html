@@ -13,7 +13,7 @@
     }
   </style>
   <script src="./live2dcubismcore.js"></script>
-  <script src="./bundle.js"></script>
+  <script src="./live2d.js"></script>
 </head>
 
 <body>
@@ -24,20 +24,20 @@
 </body>
 <script>
   // 相対パス
-  const ResourcesPath = './Resources/';
+  const ResourcesPath = './Resources/Custom/';
 
   // モデル定義---------------------------------------------
   // モデルを配置したディレクトリ名の配列
   // ディレクトリ名とmodel3.jsonの名前を一致させておくこと
   const ModelDir = ['Haru', 'Hiyori', 'Mark', 'Natori', 'Rice'];
-  setTimeout(function () {
-    let live2d = window.live2d.new();
-    live2d.init();
-    live2d.resize(300, 500);
-    live2d.changeModel(ModelDir[0], ResourcesPath);
-    live2d.addListener();
-    live2d.run();
-  }, 100);
+  let live2d = window.live2d.new();
+  live2d.init();
+  live2d.changeModel('s2', ResourcesPath);
+  live2d.addListener();
+  live2d.run();
+  live2d.resize(300, 500);
+  live2d.scale(0.7);
+  live2d.setXY(-0.65, -0.45);
 </script>
 
 </html>

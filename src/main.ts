@@ -47,8 +47,12 @@ export class Live2dAPI {
   public resetExpression: ResetExpression;
   public view: HTMLCanvasElement;
 
-  move;
-  down;
+  move(a: MouseEvent): void {
+    this.touchMoved(a.x, a.y);
+  };
+  down(a: MouseEvent): void {
+    this.touchEnded(a.x, a.y);
+  }
 
   constructor() {
     this.delegate = new LAppDelegate(this);
@@ -76,6 +80,23 @@ export class Live2dAPI {
 
   public close() {
     this.delegate.release();
+  }
+
+  public scale(size: number) {
+    this.delegate._manager._scale = size;
+  }
+
+  public setX(x: number) {
+    this.delegate._manager._x = x;
+  }
+
+  public setY(y: number) {
+    this.delegate._manager._y = y;
+  }
+
+  public setXY(x: number, y: number) {
+    this.delegate._manager._x = x;
+    this.delegate._manager._y = y;
   }
 
   public resize(width: number = 0, height: number = 0) {
@@ -179,14 +200,11 @@ export class Live2dAPI {
     return true;
   }
 
+  public setOnTap(fun) {
+    this.delegate._manager.setOnTap(fun);
+  }
+
   public addListener() {
-    let liveapi = this;
-    this.move = function (a: MouseEvent) {
-      liveapi.touchMoved(a.x, a.y);
-    };
-    this.down = function (a: MouseEvent) {
-      liveapi.touchEnded(a.x, a.y);
-    };
     addEventListener("mousemove", this.move);
     addEventListener("mousedown", this.down);
   }

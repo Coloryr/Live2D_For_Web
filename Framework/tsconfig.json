@@ -5,17 +5,15 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./",
-    "removeComments": true,
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
     "sourceMap": true,
-    "baseUrl": "./",
-    "paths": {
-      "@framework/*": ["./Framework/src/*"]
-    }
+    "emitDecoratorMetadata": true
   },
   "include": [
     "src/**/*.ts",
-    "./Core/*.ts"
+    "../Core/*.ts"
   ],
   "exclude": [
     "node_modules",

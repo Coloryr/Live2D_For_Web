@@ -40,6 +40,7 @@ import { LAppPal } from './lapppal';
 import { TextureInfo } from './lapptexturemanager';
 import { LAppWavFileHandler } from './lappwavfilehandler';
 import { Live2dAPI } from './main';
+import { JsonNullvalue } from '@framework/utils/cubismjson';
 
 enum LoadStep {
   LoadAssets,
@@ -719,6 +720,9 @@ export class LAppModel extends CubismUserModel {
   public preLoadMotionGroup(group: string): void {
     for (let i = 0; i < this._modelSetting.getMotionCount(group); i++) {
       const motionFileName = this._modelSetting.getMotionFileName(group, i);
+
+      if (motionFileName == null || motionFileName == "NullValue")
+        continue;
 
       // ex) idle_0
       const name = `${group}_${i}`;

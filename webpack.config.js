@@ -6,14 +6,14 @@ module.exports = {
   target: ['web', 'es5'],
   entry: './src/main.ts',
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/dist/'
+    path: path.resolve(__dirname, './runtime'),
+    filename: 'live2d.js',
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {
-      '@framework': path.resolve(__dirname, '../../../Framework/src')
+      '@framework': path.resolve(__dirname, './Framework/src')
     }
   },
   module: {
@@ -28,7 +28,7 @@ module.exports = {
   devServer: {
     static: [
       {
-        directory: path.resolve(__dirname, '../../..'),
+        directory: path.resolve(__dirname, './runtime'),
         serveIndex: true,
         watch: true,
       }

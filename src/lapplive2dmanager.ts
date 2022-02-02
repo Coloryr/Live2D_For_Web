@@ -54,6 +54,10 @@ export class LAppLive2DManager {
    * @param y 画面のY座標
    */
   public onTap(x: number, y: number): void {
+    if (this._onTap != null) {
+      this._onTap(x, y);
+      return;
+    }
     if (LAppDefine.DebugLogEnable) {
       LAppPal.printMessage(
         `[APP]tap point: {x: ${x.toFixed(2)} y: ${y.toFixed(2)}}`
@@ -89,17 +93,30 @@ export class LAppLive2DManager {
   public onUpdate(): void {
     if (!this._model)
       return;
-    const { width, height } = live2d_view;
+    let { width, height } = live2d_view;
 
     const projection: CubismMatrix44 = new CubismMatrix44();
 
     if (this._model.getModel()) {
+      projection.translateX(this._x);
+      projection.translateY(this._y);
+
       if (this._model.getModel().getCanvasWidth() > 1.0 && width < height) {
         // 横に長いモデルを縦長ウィンドウに表示する際モデルの横サイズでscaleを算出する
         this._model.getModelMatrix().setWidth(2.0);
-        projection.scale(1.0, width / height);
+        projection.scale(0.3, width / height);
       } else {
-        projection.scale(height / width, 1.0);
+        let re: number;
+        if (height > width) {
+          re = width / height;
+        }
+        else {
+          re = height / width;
+        }
+
+        re = re * this._scale;
+
+        projection.scale(re, re);
       }
 
       // 必要があればここで乗算
@@ -127,7 +144,7 @@ export class LAppLive2DManager {
 
     // model3.jsonのパスを決定する。
     // ディレクトリ名とmodel3.jsonの名前を一致させておくこと。
-    const modelPath: string = path + model + '/';
+    const modelPath: string = path + '/';
     let modelJsonName: string = model + '.model3.json';
 
     this._model = new LAppModel(this._delegate, this._api);
@@ -140,6 +157,18 @@ export class LAppLive2DManager {
     }
   }
 
+  public setX(x: number) {
+    this._x = x;
+  }
+
+  public setY(y: number) {
+    this._y = y;
+  }
+
+  public setOnTap(call) {
+    this._onTap = call;
+  }
+
   /**
    * コンストラクタ
    */
@@ -148,8 +177,15 @@ export class LAppLive2DManager {
     this._api = api;
     this._viewMatrix = new CubismMatrix44();
     this.changeScene();
+    this._scale = 1.0;
+    this._x = 0.0;
+    this._y = 0.0;
   }
 
+  _onTap: any;
+  _scale: number;
+  _x: number;
+  _y: number;
   _api: Live2dAPI;
   _delegate: LAppDelegate;
   _viewMatrix: CubismMatrix44; // モデル描画に用いるview行列

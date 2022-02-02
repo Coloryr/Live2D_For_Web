@@ -41,7 +41,7 @@ export class LAppView {
    * 初期化する。
    */
   public initialize(): void {
-    const { width, height } = live2d_view;
+    let { width, height } = live2d_view;
 
     const ratio: number = width / height;
     const left: number = -ratio;
