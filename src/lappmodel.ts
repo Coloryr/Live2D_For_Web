@@ -348,18 +348,24 @@ export class LAppModel extends CubismUserModel {
       this._motionCount = 0;
       const group: string[] = [];
 
-      const motionGroupCount: number = this._modelSetting.getMotionGroupCount();
+      let motionGroupCount: number = this._modelSetting.getMotionGroupCount();
+
+      let index = 0;
 
       // モーションの総数を求める
       for (let i = 0; i < motionGroupCount; i++) {
-        group[i] = this._modelSetting.getMotionGroupName(i);
-        this._allMotionCount += this._modelSetting.getMotionCount(group[i]);
+        const groupName = this._modelSetting.getMotionGroupName(i);
+        const motionFileName = this._modelSetting.getMotionFileName(groupName, 0);
+        if (!motionFileName.endsWith(".motion3.json"))
+          continue;
+        // モーションの読み込み
+        this.preLoadMotionGroup(groupName);
+        this._allMotionCount += this._modelSetting.getMotionCount(groupName);
+        group[index] = groupName;
+        index++;
       }
 
-      // モーションの読み込み
-      for (let i = 0; i < motionGroupCount; i++) {
-        this.preLoadMotionGroup(group[i]);
-      }
+      motionGroupCount = index;
 
       // モーションがない場合
       if (motionGroupCount == 0) {

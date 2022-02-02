@@ -47,16 +47,19 @@ export class Live2dAPI {
   public resetExpression: ResetExpression;
   public view: HTMLCanvasElement;
 
-  move(a: MouseEvent): void {
-    this.touchMoved(a.x, a.y);
-  };
-  down(a: MouseEvent): void {
-    this.touchEnded(a.x, a.y);
-  }
+  move;
+  down;
 
   constructor() {
+    let api = this;
     this.delegate = new LAppDelegate(this);
     this.resetExpression = new ResetExpression();
+    this.move = function (a: MouseEvent) {
+      api.touchMoved(a.x, a.y);
+    }
+    this.down = function (a: MouseEvent) {
+      api.touchEnded(a.x, a.y);
+    }
   }
 
   public init() {
