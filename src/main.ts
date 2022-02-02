@@ -68,8 +68,8 @@ export class Live2dAPI {
     }
     this.view = live2d_view;
     let liveapi = this;
-    this.view.onresize = function () {
-      liveapi.delegate.onResize();
+    this.view.onresize = function() {
+      liveapi.delegate.onResize(liveapi.view.width, liveapi.view.height);
     }
     live2d_view.style.position = "fixed";
     live2d_view.style.right = "0px";
@@ -102,7 +102,7 @@ export class Live2dAPI {
     this.delegate._manager._y = y;
   }
 
-  public resize(width: number = 0, height: number = 0) {
+  public resize(width: number, height: number) {
     this.delegate.onResize(width, height);
   }
 

@@ -32,12 +32,13 @@
   const ModelDir = ['Haru', 'Hiyori', 'Mark', 'Natori', 'Rice'];
   let live2d = window.live2d.new();
   live2d.init();
+  //live2d.resize(300, 500);
   live2d.changeModel('s2', ResourcesPath);
   live2d.addListener();
   live2d.run();
-  live2d.resize(300, 500);
+  
   live2d.scale(0.7);
-  live2d.setXY(-0.65, -0.45);
+  live2d.setXY(0, 0);
 </script>
 
 </html>

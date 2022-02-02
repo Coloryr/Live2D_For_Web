@@ -29,7 +29,7 @@ export class LAppDelegate {
   public initialize(): boolean {
     // キャンバスの作成
     live2d_view = document.createElement('canvas');
-    this._resizeCanvas();
+    this._resizeCanvas(this._width, this._height);
     // glコンテキストを初期化
     // @ts-ignore
     gl = live2d_view.getContext('webgl') || live2d_view.getContext('experimental-webgl');
@@ -66,7 +66,11 @@ export class LAppDelegate {
   /**
    * Resize canvas and re-initialize view.
    */
-  public onResize(width = 0, height = 0): void {
+  public onResize(width:number, height:number): void {
+    if (width == 0 || height == 0) {
+      console.log("[APP]size can't not be zero.");
+      return;
+    }
     this._resizeCanvas(width, height);
     this._view.initialize();
     this._view.initializeSprite();
@@ -213,6 +217,9 @@ export class LAppDelegate {
     this._manager = new LAppLive2DManager(this, this._api);
     this._view = new LAppView(this, this._manager);
     this._textureManager = new LAppTextureManager();
+
+    this._width = 300;
+    this._height = 500;
   }
 
   /**
@@ -235,15 +242,9 @@ export class LAppDelegate {
   /**
    * Resize the canvas to fill the screen.
    */
-  public _resizeCanvas(width = 0, height = 0): void {
-    if (width > 0 && height > 0) {
-      live2d_view.width = width;
-      live2d_view.height = height;
-    }
-    else {
-      live2d_view.width = window.innerWidth;
-      live2d_view.height = window.innerHeight;
-    }
+  public _resizeCanvas(width:number, height:number): void {
+    live2d_view.width = width;
+    live2d_view.height = height;
   }
 
   /**
@@ -307,6 +308,8 @@ export class LAppDelegate {
     return this._manager;
   }
 
+  _width: number;
+  _height: number;
   _api: Live2dAPI;
   _manager: LAppLive2DManager;
   _cubismOption: Option; // Cubism SDK Option
