@@ -28,8 +28,9 @@ export class LAppDelegate {
    */
   public initialize(): boolean {
     // キャンバスの作成
-    live2d_view = document.createElement('canvas');
-    this._resizeCanvas(this._width, this._height);
+    live2d_view = document.createElement('canvas'); 
+    live2d_view.width = this._width;
+    live2d_view.height = this._height;
     // glコンテキストを初期化
     // @ts-ignore
     gl = live2d_view.getContext('webgl') || live2d_view.getContext('experimental-webgl');
@@ -38,7 +39,7 @@ export class LAppDelegate {
       alert('Cannot initialize WebGL. This browser does not support.');
       gl = null;
       // gl初期化失敗
-      return false;
+      return;
     }
 
     // キャンバスを DOM に追加
@@ -49,10 +50,8 @@ export class LAppDelegate {
     }
 
     // 透過設定
-    gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.clear(gl.COLOR_BUFFER_BIT);
 
     // AppViewの初期化
     this._view.initialize();
@@ -66,14 +65,20 @@ export class LAppDelegate {
   /**
    * Resize canvas and re-initialize view.
    */
-  public onResize(width:number, height:number): void {
+  public onResize(width: number, height: number): boolean {
     if (width == 0 || height == 0) {
       console.log("[APP]size can't not be zero.");
-      return;
+      return false; 
     }
-    this._resizeCanvas(width, height);
+
+    this._width = width;
+    this._height = height;
+
+    this._resizeCanvas();
     this._view.initialize();
     this._view.initializeSprite();
+
+    return true;
   }
 
   /**
@@ -218,7 +223,7 @@ export class LAppDelegate {
     this._view = new LAppView(this, this._manager);
     this._textureManager = new LAppTextureManager();
 
-    this._width = 300;
+    this._width = 500;
     this._height = 500;
   }
 
@@ -242,9 +247,9 @@ export class LAppDelegate {
   /**
    * Resize the canvas to fill the screen.
    */
-  public _resizeCanvas(width:number, height:number): void {
-    live2d_view.width = width;
-    live2d_view.height = height;
+  public _resizeCanvas(): void {
+    live2d_view.width = this._width;
+    live2d_view.height = this._height;
   }
 
   /**

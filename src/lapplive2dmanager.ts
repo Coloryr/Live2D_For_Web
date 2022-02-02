@@ -93,7 +93,7 @@ export class LAppLive2DManager {
   public onUpdate(): void {
     if (!this._model)
       return;
-    let { width, height } = live2d_view;
+    const { width, height } = live2d_view;
 
     const projection: CubismMatrix44 = new CubismMatrix44();
 
@@ -106,7 +106,14 @@ export class LAppLive2DManager {
         this._model.getModelMatrix().setWidth(2.0);
         projection.scale(1.0 * this._scale, width / height * this._scale);
       } else {
-        projection.scale(height /width * this._scale, 1.0 * this._scale);
+        let res: number;
+        if (height > width) {
+          res = width / height;
+        }
+        else {
+          res = height / width;
+        }
+        projection.scale(res * this._scale, res * this._scale);
       }
 
       // 必要があればここで乗算
