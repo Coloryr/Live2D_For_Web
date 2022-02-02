@@ -26,11 +26,11 @@ export class LAppDelegate {
   /**
    * APPに必要な物を初期化する。
    */
-  public initialize(): boolean {
+  public initialize(width:number, height:number): boolean {
     // キャンバスの作成
     live2d_view = document.createElement('canvas'); 
-    live2d_view.width = this._width;
-    live2d_view.height = this._height;
+    live2d_view.width = this._width = width;
+    live2d_view.height = this._height = height;
     // glコンテキストを初期化
     // @ts-ignore
     gl = live2d_view.getContext('webgl') || live2d_view.getContext('experimental-webgl');
@@ -222,9 +222,6 @@ export class LAppDelegate {
     this._manager = new LAppLive2DManager(this, this._api);
     this._view = new LAppView(this, this._manager);
     this._textureManager = new LAppTextureManager();
-
-    this._width = 500;
-    this._height = 500;
   }
 
   /**

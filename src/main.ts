@@ -62,8 +62,8 @@ export class Live2dAPI {
     }
   }
 
-  public init() {
-    if (this.delegate.initialize() == false) {
+  public init(width:number, height:number) {
+    if (this.delegate.initialize(width, height) == false) {
       return false;
     }
     this.view = live2d_view;

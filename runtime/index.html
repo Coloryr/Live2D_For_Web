@@ -31,14 +31,12 @@
   // ディレクトリ名とmodel3.jsonの名前を一致させておくこと
   const ModelDir = ['Haru', 'Hiyori', 'Mark', 'Natori', 'Rice'];
   let live2d = window.live2d.new();
-  live2d.init();
-  //live2d.resize(300, 500);
+  live2d.init(500, 500);
   live2d.changeModel('s2', ResourcesPath);
   live2d.addListener();
   live2d.run();
-  
-  //live2d.scale(0.7);
-  live2d.setXY(0, 0);
+  live2d.scale(0.8);
+  live2d.setXY(-0.3, 0);
 </script>
 
 </html>
