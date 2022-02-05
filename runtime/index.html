@@ -24,19 +24,22 @@
 </body>
 <script>
   // 相対パス
-  const ResourcesPath = './Resources/Haru/';
+  const ResourcesPath = './Resources/sizuku';
 
   // モデル定義---------------------------------------------
   // モデルを配置したディレクトリ名の配列
   // ディレクトリ名とmodel3.jsonの名前を一致させておくこと
   const ModelDir = ['Haru', 'Hiyori', 'Mark', 'Natori', 'Rice'];
   let live2d = window.live2d.new();
-  live2d.init(500, 500);
-  live2d.changeModel('Haru', ResourcesPath);
+  live2d.init(800, 800);
+  live2d.changeModel('shizuku', ResourcesPath);
+  live2d.setBreathName("PARAM_BREATH");
+  live2d.useCustomScale(false);
+  live2d.initModel();
   live2d.addListener();
   live2d.run();
   live2d.scale(0.8);
-  live2d.setXY(-0.3, 0);
+  live2d.setXY(0, 0);
 </script>
 
 </html>

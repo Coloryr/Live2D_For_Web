@@ -243,23 +243,16 @@ export class LAppModel extends CubismUserModel {
       this._breath = CubismBreath.create();
 
       const breathParameters: csmVector<BreathParameterData> = new csmVector();
-      breathParameters.pushBack(
-        new BreathParameterData(this._idParamAngleX, 0.0, 15.0, 6.5345, 0.5)
-      );
-      breathParameters.pushBack(
-        new BreathParameterData(this._idParamAngleY, 0.0, 8.0, 3.5345, 0.5)
-      );
-      breathParameters.pushBack(
-        new BreathParameterData(this._idParamAngleZ, 0.0, 10.0, 5.5345, 0.5)
-      );
-      breathParameters.pushBack(
-        new BreathParameterData(this._idParamBodyAngleX, 0.0, 4.0, 15.5345, 0.5)
-      );
+
+      if (this._idParamBreath == null) {
+        this._idParamBreath = CubismFramework.getIdManager().getId(
+          CubismDefaultParameterId.ParamBreath
+        );
+      }
+
       breathParameters.pushBack(
         new BreathParameterData(
-          CubismFramework.getIdManager().getId(
-            CubismDefaultParameterId.ParamBreath
-          ),
+          this._idParamBreath,
           0.5,
           0.5,
           3.2345,
@@ -461,7 +454,7 @@ export class LAppModel extends CubismUserModel {
 
     //--------------------------------------------------------------------------
     this._model.loadParameters(); // 前回セーブされた状態をロード
-    if (this._motionManager.isFinished()) {
+    if (this._motionManager.isFinished() && this._motionRandom) {
       // モーションの再生がない場合、待機モーションの中からランダムで再生する
       this.startRandomMotion(
         LAppDefine.MotionGroupIdle,
@@ -875,6 +868,7 @@ export class LAppModel extends CubismUserModel {
     this._wavFileHandler = new LAppWavFileHandler();
   }
 
+  _motionRandom: boolean;
   _api: Live2dAPI;
   _delegate: LAppDelegate;
   _modelSetting: ICubismModelSetting; // モデルセッティング情報
@@ -896,6 +890,7 @@ export class LAppModel extends CubismUserModel {
   _idParamEyeBallX: CubismIdHandle; // パラメータID: ParamEyeBallX
   _idParamEyeBallY: CubismIdHandle; // パラメータID: ParamEyeBAllY
   _idParamBodyAngleX: CubismIdHandle; // パラメータID: ParamBodyAngleX
+  _idParamBreath: CubismIdHandle;
 
   _state: number; // 現在のステータス管理用
   _expressionCount: number; // 表情データカウント

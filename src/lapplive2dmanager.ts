@@ -104,8 +104,20 @@ export class LAppLive2DManager {
       if (this._model.getModel().getCanvasWidth() > 1.0 && width < height) {
         // 横に長いモデルを縦長ウィンドウに表示する際モデルの横サイズでscaleを算出する
         this._model.getModelMatrix().setWidth(2.0);
+        if (this._my_scale) {
+          projection.scale(this._scale, this._scale);
+        }
+        else {
+          projection.scale(1.0 * this._scale, width / height * this._scale);
+        }
+      } else {
+        if (this._my_scale) {
+          projection.scale(this._scale, this._scale);
+        }
+        else {
+          projection.scale(height / width * this._scale, 1.0 * this._scale);
+        }
       }
-      projection.scale(this._scale, this._scale);
 
       // 必要があればここで乗算
       if (this._viewMatrix != null) {
@@ -132,11 +144,14 @@ export class LAppLive2DManager {
 
     // model3.jsonのパスを決定する。
     // ディレクトリ名とmodel3.jsonの名前を一致させておくこと。
-    const modelPath: string = path + '/';
-    let modelJsonName: string = model + '.model3.json';
+    this._modelPath = path + '/';
+    this._modelJsonName = model + '.model3.json';
 
     this._model = new LAppModel(this._delegate, this._api);
-    this._model.loadAssets(modelPath, modelJsonName);
+  }
+
+  public initModel() {
+    this._model.loadAssets(this._modelPath, this._modelJsonName);
   }
 
   public setViewMatrix(m: CubismMatrix44) {
@@ -170,6 +185,9 @@ export class LAppLive2DManager {
     this._y = 0.0;
   }
 
+  _modelPath: string;
+  _modelJsonName: string;
+  _my_scale: boolean;
   _onTap: any;
   _scale: number;
   _x: number;

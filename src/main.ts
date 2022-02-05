@@ -5,6 +5,8 @@
  * that can be found at https://www.live2d.com/eula/live2d-open-software-license-agreement_en.html.
  */
 
+import { CubismIdHandle } from '@framework/id/cubismid';
+import { CubismFramework } from '@framework/live2dcubismframework';
 import { live2d_view, LAppDelegate } from './lappdelegate';
 import { LAppPal } from './lapppal';
 
@@ -26,6 +28,16 @@ function getElementLeft(element) {
     current = current.offsetParent;
   }
   return actualLeft;
+}
+
+export class Parameters {
+  public id: string;
+  public minimumValue: number;
+  public maximumValue: number;
+  public defaultValue: number;
+  public value: number;
+  public keyCount: number;
+  public keyValue: Float32Array;
 }
 
 export class ResetExpression {
@@ -62,13 +74,13 @@ export class Live2dAPI {
     }
   }
 
-  public init(width:number, height:number) {
+  public init(width: number, height: number) {
     if (this.delegate.initialize(width, height) == false) {
       return false;
     }
     this.view = live2d_view;
     let liveapi = this;
-    this.view.onresize = function() {
+    this.view.onresize = function () {
       liveapi.delegate.onResize(liveapi.view.width, liveapi.view.height);
     }
     live2d_view.style.position = "fixed";
@@ -106,6 +118,62 @@ export class Live2dAPI {
     this.delegate.onResize(width, height);
   }
 
+  public setMotionRandom(open: boolean) {
+    var model = this.delegate._manager._model;
+    if (model) {
+      model._motionRandom = open;
+      return true;
+    }
+    return false;
+  }
+
+  public setParameter1(id: CubismIdHandle, value: number) {
+    let model = this.delegate._manager._model;
+    if (model == null)
+      return null;
+    let model1 = model.getModel();
+    model1.setParameterValueById(id, value);
+  }
+
+  public setParameter(id: string, value: number) {
+    let model = this.delegate._manager._model;
+    if (model == null)
+      return null;
+    let model1 = model.getModel();
+    model1.setParameterValueById(this.getID(id), value);
+  }
+
+  public getParameters() {
+    let model = this.delegate._manager._model;
+    if (model == null)
+      return null;
+    let model1 = model.getModel();
+    let list = new Array();
+    let list1 = model1.getModel().parameters;
+
+    for (let a = 0; a < list1.count; a++) {
+      let item = new Parameters();
+      item.id = list1.ids[a];
+      item.defaultValue = list1.defaultValues[a];
+      item.keyCount = list1.keyCounts[a];
+      item.keyValue = list1.keyValues[a];
+      item.maximumValue = list1.maximumValues[a];
+      item.minimumValue = list1.minimumValues[a];
+      item.value = list1.values[a];
+      list[a] = item;
+    }
+    return list;
+  }
+
+  public setBreathName(name: string) {
+    let id = this.getID(name);
+    this.delegate._manager._model._idParamBreath = id;
+  }
+
+  public initModel() {
+    this.delegate._manager.initModel();
+  }
+
   public changeModel(name: string, path: string) {
     if (path == null) {
       if (this.path == null) {
@@ -135,6 +203,14 @@ export class Live2dAPI {
       clearInterval(timer);
     }, 200);
     return true;
+  }
+
+  public getID(id: string) {
+    return CubismFramework.getIdManager().getId(id);
+  }
+
+  public useCustomScale(open: boolean) {
+    this.delegate._manager._my_scale = open;
   }
 
   public fixPos(x: number, y: number) {
