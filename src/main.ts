@@ -40,6 +40,13 @@ export class Parameters {
   public keyValue: Float32Array;
 }
 
+export class Parts {
+  public count: number;
+  public ids: string;
+  public opacities: number;
+  public parentIndices: number;
+}
+
 export class ResetExpression {
   constructor() {
     this.enable = true;
@@ -127,14 +134,6 @@ export class Live2dAPI {
     return false;
   }
 
-  public setParameter1(id: CubismIdHandle, value: number) {
-    let model = this.delegate._manager._model;
-    if (model == null)
-      return null;
-    let model1 = model.getModel();
-    model1.setParameterValueById(id, value);
-  }
-
   public setParameter(id: string, value: number) {
     let model = this.delegate._manager._model;
     if (model == null)
@@ -160,6 +159,33 @@ export class Live2dAPI {
       item.maximumValue = list1.maximumValues[a];
       item.minimumValue = list1.minimumValues[a];
       item.value = list1.values[a];
+      list[a] = item;
+    }
+    return list;
+  }
+
+  public setPart(id: string, value: number) {
+    let model = this.delegate._manager._model;
+    if (model == null)
+      return null;
+    let model1 = model.getModel();
+    model1.setPartOpacityById(this.getID(id), value);
+  }
+
+  public getParts() {
+    let model = this.delegate._manager._model;
+    if (model == null)
+      return null;
+    let model1 = model.getModel();
+    let list = new Array();
+    let list1 = model1.getModel().parts;
+
+    for (let a = 0; a < list1.count; a++) {
+      let item = new Parts();
+      item.count = list1.count[a];
+      item.ids = list1.ids[a];
+      item.opacities = list1.opacities[a];
+      item.parentIndices = list1.parentIndices[a];
       list[a] = item;
     }
     return list;
